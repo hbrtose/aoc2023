@@ -1,14 +1,17 @@
 fun main() {
 
-    fun part1(input: List<String>): Int {
-        val hands = input.map { hand ->
+    fun getHands(input: List<String>, jokerify: Boolean): List<Hand> {
+        return input.map { hand ->
             val parts = hand.split(" ")
             val bid = parts[1].toInt()
             val cards = parts[0].map {
                 CamelCard.fromChar(it)
             }.filterNotNull()
-            Hand(cards, bid)
+            Hand(cards, bid, jokerify)
         }
+    }
+
+    fun calculateSum(hands: List<Hand>): Int {
         var sum = 0
         hands.sorted().forEachIndexed { index, hand ->
             sum += (hand.bid * (index + 1))
@@ -16,22 +19,12 @@ fun main() {
         return sum
     }
 
-
+    fun part1(input: List<String>): Int {
+        return calculateSum(getHands(input, false))
+    }
 
     fun part2(input: List<String>): Int {
-        val hands = input.map { hand ->
-            val parts = hand.split(" ")
-            val bid = parts[1].toInt()
-            val cards = parts[0].map {
-                CamelCard.fromChar(it)
-            }.filterNotNull()
-            Hand(cards, bid, true)
-        }
-        var sum = 0
-        hands.sorted().forEachIndexed { index, hand ->
-            sum += (hand.bid * (index + 1))
-        }
-        return sum
+        return calculateSum(getHands(input, true))
     }
 
     // test if implementation meets criteria from the description, like:
@@ -78,69 +71,47 @@ data class Hand(
         return when (score) {
             Score.HIGH_CARD -> {
                 when (cards.count { it == CamelCard.JACK }) {
-                    1 -> {
-                        Score.PAIR
-                    }
+                    1 -> Score.PAIR
                     else -> score
                 }
             }
 
             Score.PAIR -> {
                 when (cards.count { it == CamelCard.JACK }) {
-                    1 -> {
-                        Score.THREE_OF_A_KIND
-                    }
-                    2 -> {
-                        Score.THREE_OF_A_KIND
-                    }
+                    1 -> Score.THREE_OF_A_KIND
+                    2 -> Score.THREE_OF_A_KIND
                     else -> score
                 }
             }
 
             Score.TWO_PAIR -> {
                 when (cards.count { it == CamelCard.JACK }) {
-                    1 -> {
-                        Score.FULL_HOUSE
-                    }
-                    2 -> {
-                        Score.FOUR_OF_A_KIND
-                    }
+                    1 -> Score.FULL_HOUSE
+                    2 -> Score.FOUR_OF_A_KIND
                     else -> score
                 }
             }
 
             Score.THREE_OF_A_KIND -> {
                 when (cards.count { it == CamelCard.JACK }) {
-                    1 -> {
-                        Score.FOUR_OF_A_KIND
-                    }
-                    3 -> {
-                        Score.FOUR_OF_A_KIND
-                    }
+                    1 -> Score.FOUR_OF_A_KIND
+                    3 -> Score.FOUR_OF_A_KIND
                     else -> score
                 }
             }
 
             Score.FULL_HOUSE -> {
                 when (cards.count { it == CamelCard.JACK }) {
-                    2 -> {
-                        Score.FIVE_OF_A_KIND
-                    }
-                    3 -> {
-                        Score.FIVE_OF_A_KIND
-                    }
+                    2 -> Score.FIVE_OF_A_KIND
+                    3 -> Score.FIVE_OF_A_KIND
                     else -> score
                 }
             }
 
             Score.FOUR_OF_A_KIND -> {
                 when (cards.count { it == CamelCard.JACK }) {
-                    1 -> {
-                        Score.FIVE_OF_A_KIND
-                    }
-                    4 -> {
-                        Score.FIVE_OF_A_KIND
-                    }
+                    1 -> Score.FIVE_OF_A_KIND
+                    4 -> Score.FIVE_OF_A_KIND
                     else -> score
                 }
             }
@@ -158,9 +129,9 @@ data class Hand(
             cards.forEachIndexed { index, camelCard ->
                 var ourCard = if (jokerify && camelCard == CamelCard.JACK) CamelCard.ONE else camelCard
                 var theirCard = if (jokerify && other.cards[index] == CamelCard.JACK) CamelCard.ONE else other.cards[index]
-                if (ourCard.ordinal > theirCard.ordinal) {
+                if (ourCard > theirCard) {
                     return 1
-                } else if (ourCard.ordinal < theirCard.ordinal) {
+                } else if (ourCard < theirCard) {
                     return -1
                 }
             }
