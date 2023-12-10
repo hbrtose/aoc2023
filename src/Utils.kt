@@ -19,3 +19,7 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  * The cleaner shorthand for printing output.
  */
 fun Any?.println() = println(this)
+
+operator fun Pair<Int, Int>.plus(p: Pair<Int, Int>): Pair<Int, Int> {
+    return this.first + p.first to this.second + p.second
+}
