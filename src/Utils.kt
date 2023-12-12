@@ -20,6 +20,11 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  */
 fun Any?.println() = println(this)
 
+fun Int.factorial(): Int {
+    if (this == 1) return 1
+    return this * (this - 1).factorial()
+}
+
 operator fun Pair<Int, Int>.plus(p: Pair<Int, Int>): Pair<Int, Int> {
     return this.first + p.first to this.second + p.second
 }
