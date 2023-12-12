@@ -8,17 +8,9 @@ fun main() {
             } else if (info.startsWith(".")) {
                 res = compute(info.drop(1), groups, cache)
             } else if (info.startsWith("?")) {
-                res = compute(info.replaceFirst("?", "."), groups, cache) + compute(
-                    info.replaceFirst(
-                        "?",
-                        "#"
-                    ), groups, cache)
+                res = compute(info.replaceFirst("?", "."), groups, cache) + compute(info.replaceFirst("?", "#"), groups, cache)
             } else {
-                res = if (groups.isEmpty()) {
-                    0
-                } else if (info.length < groups[0]) {
-                    0
-                } else if (info.substring(0, groups[0]).contains(".")) {
+                res = if (groups.isEmpty() || info.length < groups[0] || info.substring(0, groups[0]).contains(".")) {
                     0
                 } else if (groups.size > 1) {
                     if (info.length < groups[0] + 1 || info[groups[0]] == '#') {
@@ -44,7 +36,6 @@ fun main() {
             repeat(times) {
                 groupsMulti.addAll(groups)
             }
-            println("$infoMulti - $groupsMulti")
             compute(infoMulti, groupsMulti, cache)
         } ?: compute(info, groups, cache)
     }
