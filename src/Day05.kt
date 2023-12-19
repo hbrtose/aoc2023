@@ -61,7 +61,6 @@ fun main() {
 
 
     fun part2(input: List<String>): Long {
-        var seeds = listOf<Long>()
         var ranges = listOf<LongRange>()
         input.forEach { line ->
             if (line.startsWith("seeds")) {

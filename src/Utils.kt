@@ -63,3 +63,18 @@ fun <T> nTimes(f: (T) -> T, init: T, n: Long): T {
         f(value)
     }
 }
+
+data class Point(val x: Int, val y: Int) {
+    companion object {
+        val UP = Point(0, -1)
+        val RIGHT = Point(1, 0)
+        val DOWN = Point(0, 1)
+        val LEFT = Point(-1, 0)
+    }
+
+    operator fun minus(other: Point): Point = Point(x - other.x, y - other.y)
+
+    operator fun plus(other: Point): Point = Point(x + other.x, y + other.y)
+
+    operator fun times(i: Int): Point = Point(x * i, y * i)
+}
