@@ -26,19 +26,6 @@ fun main() {
         return steps
     }
 
-    fun lcm(a: Long, b: Long): Long {
-        val larger = max(a, b)
-        val maxLcm = a * b
-        var lcm = larger
-        while (lcm <= maxLcm) {
-            if (lcm % a == 0L && lcm % b == 0L) {
-                return lcm
-            }
-            lcm += larger
-        }
-        return maxLcm
-    }
-
     fun part2(input: List<String>): Long {
         val route = input[0]
         val map = hashMapOf<String, Pair<String, String>>()

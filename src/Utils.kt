@@ -1,7 +1,9 @@
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.LinkedList
 import kotlin.io.path.Path
 import kotlin.io.path.readLines
+import kotlin.math.max
 
 /**
  * Reads lines from the given input txt file.
@@ -64,12 +66,37 @@ fun <T> nTimes(f: (T) -> T, init: T, n: Long): T {
     }
 }
 
+fun lcm(a: Long, b: Long): Long {
+    val larger = max(a, b)
+    val maxLcm = a * b
+    var lcm = larger
+    while (lcm <= maxLcm) {
+        if (lcm % a == 0L && lcm % b == 0L) {
+            return lcm
+        }
+        lcm += larger
+    }
+    return maxLcm
+}
+
+fun <T> LinkedList<T>.copy(): LinkedList<T> {
+    val l = LinkedList<T>()
+    forEach {
+        l.offer(it)
+    }
+    return l
+}
+
 data class Point(val x: Int, val y: Int) {
     companion object {
         val UP = Point(0, -1)
         val RIGHT = Point(1, 0)
         val DOWN = Point(0, 1)
         val LEFT = Point(-1, 0)
+    }
+
+    fun nearby4(): List<Point> {
+        return listOf(this + UP, this + DOWN, this + RIGHT, this + LEFT)
     }
 
     operator fun minus(other: Point): Point = Point(x - other.x, y - other.y)
