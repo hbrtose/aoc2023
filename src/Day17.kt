@@ -35,7 +35,7 @@ fun main() {
                     .getValue(current.state.direction)
                     .filter {
                         val p = current.state.p + it
-                        p.x >= 0 && p.x <= map.first().lastIndex && p.y >= 0 && p.y <= map.lastIndex
+                        p.containedInArrays(map)
                     }
                     .filter { isValid(current.state, it) }
                     .map { current.state.next(it) }
@@ -46,7 +46,6 @@ fun main() {
                     }
             }
         }
-        println(losses)
         return losses.min()
     }
 

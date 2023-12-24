@@ -2,31 +2,31 @@ import java.lang.Math.abs
 
 fun main() {
 
-    fun findGalaxies(input: List<String>): List<Pair<Int, Int>> {
-        val galaxies = mutableListOf<Pair<Int, Int>>()
+    fun findGalaxies(input: List<String>): List<Point> {
+        val galaxies = mutableListOf<Point>()
         input.forEachIndexed { index, s ->
             s.forEachIndexed { indexOfChar, c ->
                 if (c == '#') {
-                    galaxies.add(index to indexOfChar)
+                    galaxies.add(Point(indexOfChar, index))
                 }
             }
         }
         return galaxies
     }
 
-    fun expand(input: List<String>, galaxies: List<Pair<Int, Int>>, by: Long): List<Pair<Long, Long>> {
+    fun expand(input: List<String>, galaxies: List<Point>, by: Long): List<Point> {
         val emptyRows = input.indices.filter { !input[it].contains("#") }
         val emptyCols = input[0].indices.filter { ind -> input.all { it[ind] == '.' } }
-        return galaxies.map { (row, col) ->
-            var r = row.toLong()
-            var c = col.toLong()
+        return galaxies.map { p ->
+            var r = p.y.toLong()
+            var c = p.x.toLong()
             for (er in emptyRows) {
-                if (row > er) r += by - 1
+                if (p.y > er) r += by - 1
             }
             for (ec in emptyCols) {
-                if (col > ec) c += by - 1
+                if (p.x > ec) c += by - 1
             }
-            r to c
+            Point(r.toInt(), c.toInt())
         }
     }
 
@@ -35,7 +35,7 @@ fun main() {
         val expanded = expand(input, galaxies, 2L)
         return expanded.flatMap { g ->
             expanded.map { gg ->
-                abs(g.first - gg.first) + abs(g.second - gg.second)
+                abs(g.y - gg.y) + abs(g.x - gg.x)
             }
         }.sum() / 2L
     }
@@ -45,7 +45,7 @@ fun main() {
         val expanded = expand(input, galaxies, 1000000L)
         return expanded.flatMap { g ->
             expanded.map { gg ->
-                abs(g.first - gg.first) + abs(g.second - gg.second)
+                abs(g.y - gg.y) + abs(g.x - gg.x)
             }
         }.sum() / 2L
     }

@@ -1,30 +1,30 @@
 fun main() {
 
-    fun getStart(input: List<String>): Pair<Int, Int> {
+    fun getStart(input: List<String>): Point {
         val y = input.indexOfFirst { it.contains('S') }
         val x = input[y].indexOf('S')
-        return y to x
+        return Point(x, y)
     }
 
-    fun path(input: List<String>, loc: Pair<Int, Int>, dir: Pair<Int, Int>): Pair<Int, Int> {
+    fun path(input: List<String>, loc: Point, dir: Point): Point {
         var dir1 = dir
-        return when(input[loc.first][loc.second]) {
+        return when(input[loc.y][loc.x]) {
             '|' -> dir1
             '-' -> dir1
             'L' -> {
-                dir1 = if (dir1 == 1 to 0) 0 to 1 else -1 to 0
+                dir1 = if (dir1 == Point.DOWN) Point.RIGHT else Point.UP
                 dir1
             }
             'J' -> {
-                dir1 = if (dir1 == 1 to 0) 0 to -1 else -1 to 0
+                dir1 = if (dir1 == Point.DOWN) Point.LEFT else Point.UP
                 dir1
             }
             '7' -> {
-                dir1 = if (dir1 == -1 to 0) 0 to -1 else 1 to 0
+                dir1 = if (dir1 == Point.UP) Point.LEFT else Point.DOWN
                 dir1
             }
             else -> {
-                dir1 = if (dir1 == -1 to 0) 0 to 1 else 1 to 0
+                dir1 = if (dir1 == Point.UP) Point.RIGHT else Point.DOWN
                 dir1
             }
         }
@@ -32,7 +32,7 @@ fun main() {
 
     fun part1(input: List<String>): Int {
         val start = getStart(input)
-        var direction = 0 to 1
+        var direction = Point.DOWN
         var steps = 1
         var location = start + direction
         while (location != start) {
@@ -79,17 +79,17 @@ fun main() {
 
     fun part2(input: List<String>): Int {
         val start = getStart(input)
-        var direction = 0 to 1
+        var direction = Point.RIGHT
         var steps = 1
         var location = start + direction
         val closed = Array(input.size) { Array(input[0].length) { '.' } }
         while (location != start) {
             steps++
             direction = path(input, location, direction)
-            closed[location.first][location.second] = input[location.first][location.second]
+            closed[location.y][location.x] = input[location.y][location.x]
             location += direction
         }
-        closed[start.first][start.second] = '|'
+        closed[start.y][start.x] = '|'
         return countClosed(closed)
     }
 

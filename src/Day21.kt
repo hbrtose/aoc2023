@@ -17,7 +17,7 @@ fun main() {
         val res = mutableSetOf<Point>()
         points.forEach { p ->
             var neighbors = p.nearby4()
-                .filter { it.x in input.first().indices && it.y in input.indices }
+                .filter { it.containedIn(input) }
                 .filter { input[it.y][it.x] != '#' }
             neighbors.forEach {
                 visited[it.y][it.x] = true

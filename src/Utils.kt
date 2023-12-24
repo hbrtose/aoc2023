@@ -87,6 +87,11 @@ fun <T> LinkedList<T>.copy(): LinkedList<T> {
     return l
 }
 
+fun <T> List<T>.combinations(size: Int): List<List<T>> = when (size) {
+    0 -> listOf(listOf())
+    else -> flatMapIndexed { idx, element -> drop(idx + 1).combinations(size - 1).map { listOf(element) + it } }
+}
+
 data class Point(val x: Int, val y: Int) {
     companion object {
         val UP = Point(0, -1)
@@ -97,6 +102,14 @@ data class Point(val x: Int, val y: Int) {
 
     fun nearby4(): List<Point> {
         return listOf(this + UP, this + DOWN, this + RIGHT, this + LEFT)
+    }
+
+    fun containedIn(list: List<String>): Boolean {
+        return y in list.indices && x in list.first().indices
+    }
+
+    fun <T> containedInArrays(list: List<List<T>>): Boolean {
+        return y in list.indices && x in list.first().indices
     }
 
     operator fun minus(other: Point): Point = Point(x - other.x, y - other.y)
